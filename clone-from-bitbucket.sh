@@ -7,9 +7,8 @@ read_credentials() {
     IFS="|"
     while read -r _username _password; do
         username=$_username
-        # shellcheck disable=SC2034
         password=$_password
-    done < .apppass
+    done < .bitbucket-credentials
     IFS=$oldifs
 }
 
