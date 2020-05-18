@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Migrate git and hg repositories from bitbucket.org to github.com
+# Clone all repositories from bitbucket.org
 
 read_credentials() {
     oldifs=$IFS
@@ -21,6 +21,7 @@ clone_repo() {
     [[ $scm != hg && $scm != git ]] && exit 1
 
     echo "$scm clone $repo"
+    "$scm" clone "$repo"
 }
 
 handle_response() {
@@ -46,5 +47,14 @@ fetch_response() {
     [[ $next_page != "null" ]] && fetch_response "$next_page"
 }
 
+usage() {
+    echo "$0 team"
+    echo "Clonse all <team> repositories from bitbucket.org"
+    echo
+}
+
 read_credentials
-fetch_response "https://api.bitbucket.org/2.0/repositories/logit"
+
+team=$1
+[[ -z $team ]] && { usage; exit 1; }
+fetch_response "https://api.bitbucket.org/2.0/repositories/$team"
