@@ -20,7 +20,7 @@ clone_repo() {
     [[ $scm != hg && $scm != git ]] && exit 1
 
     echo "$scm clone $repo"
-    "$scm" clone "$repo"
+    [[ $DRYRUN != "yes" ]] && "$scm" clone "$repo"
 }
 
 handle_response() {
@@ -54,6 +54,30 @@ usage() {
 
 read_credentials
 
-team=$1
+DRYRUN=no
+while [[ $1 ]]; do
+    case "$1" in
+        --dry-run)
+            DRYRUN=yes
+            ;;
+        --team)
+            team="$2"
+            ;;
+        --output-dir)
+            outputdir="$2"
+            ;;
+        --help|-h)
+            usage
+            exit 0
+            ;;
+    esac
+    shift
+done
+
+olddir=$(pwd)
+cd "$outputdir" || exit 1
+
 [[ -z $team ]] && { usage; exit 1; }
 fetch_response "https://api.bitbucket.org/2.0/repositories/$team"
+
+cd "$olddir" || exit 1
