@@ -48,7 +48,7 @@ fetch_response() {
 
 usage() {
     echo "$0 team"
-    echo "Clonse all <team> repositories from bitbucket.org"
+    echo "Clone all <team> repositories from bitbucket.org"
     echo
 }
 
