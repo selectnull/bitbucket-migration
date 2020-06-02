@@ -27,7 +27,7 @@ remove_bitbucket_origin() {
 
     echo "Remove bitbucket origin from ${repo}"
     [[ $DRYRUN != "yes" ]] && {
-        [[ -n $(git remote) ]] & {
+        [[ -n $(git remote) ]] && {
             git remote remove origin
         }
     }
