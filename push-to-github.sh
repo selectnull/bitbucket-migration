@@ -38,7 +38,7 @@ add_github_origin() {
 
     echo "Add github origin to ${repo}"
     [[ $DRYRUN != "yes" ]] && {
-        git remote add origin git@github.com:logitnet/"${repo}".git
+        git remote add origin git@github.com:"${organization}/${repo}".git
         git push -u origin master
     }
 }
@@ -62,6 +62,9 @@ while [[ $1 ]]; do
         --dry-run)
             DRYRUN=yes
             ;;
+        --organization|--org)
+            organization="$2"
+            ;;
         --source-dir)
             sourcedir="$2"
             ;;
@@ -73,6 +76,6 @@ while [[ $1 ]]; do
     shift
 done
 
-[[ -z $sourcedir ]] && { usage; exit 1; }
+[[ -z $organization ]] || [[ -z $sourcedir ]] && { usage; exit 1; }
 
 process_directory "${sourcedir}"
