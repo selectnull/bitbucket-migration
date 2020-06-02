@@ -22,8 +22,6 @@ createrepo() {
 }
 
 process_directory() {
-    local dir="${sourcedir}"
-    local team="${team}"
     for dir in "${sourcedir}"/*; do
         repo=$(basename "$dir")
         createrepo "${repo}"
