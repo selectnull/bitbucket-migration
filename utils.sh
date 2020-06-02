@@ -13,3 +13,15 @@ is_repository() {
     scm=$2
     test -d "$directory/.$scm"
 }
+
+read_credentials() {
+    file="$1"
+    oldifs=$IFS
+    IFS="|"
+    while read -r _username _password; do
+        export USERNAME=$_username
+        export PASSWORD=$_password
+    done < "$file"
+    IFS=$oldifs
+}
+

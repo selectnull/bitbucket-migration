@@ -6,16 +6,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # shellcheck disable=SC1090
 source "$DIR/utils.sh"
 
-read_credentials() {
-    oldifs=$IFS
-    IFS="|"
-    while read -r _username _password; do
-        username=$_username
-        password=$_password
-    done < "$DIR"/.github-credentials
-    IFS=$oldifs
-}
-
 createrepo() {
     repo="$1"
     CREATEREPO="{\"name\": \"${repo}\", \"private\": true}"
@@ -23,7 +13,7 @@ createrepo() {
     is_git "${sourcedir}/${repo}" && {
         echo "Create ${repo} repo for ${team}"
         [[ $DRYRUN != "yes" ]] && {
-            curl --user "${username}:${password}" \
+            curl --user "${USERNAME}:${PASSWORD}" \
                 --header "Content-Type: application/json" \
                 --data "${CREATEREPO}" \
                 "https://api.github.com/orgs/${team}/repos"
@@ -70,5 +60,5 @@ done
 
 [[ -z $team ]] || [[ -z $sourcedir ]] && { usage; exit 1; }
 
-read_credentials
+read_credentials .github-credentials
 process_directory "${sourcedir}" "${team}"

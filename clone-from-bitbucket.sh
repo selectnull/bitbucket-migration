@@ -2,15 +2,9 @@
 
 # Clone all repositories from bitbucket.org
 
-read_credentials() {
-    oldifs=$IFS
-    IFS="|"
-    while read -r _username _password; do
-        username=$_username
-        password=$_password
-    done < .bitbucket-credentials
-    IFS=$oldifs
-}
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+# shellcheck disable=SC1090
+source "$DIR/utils.sh"
 
 clone_repo() {
     local repo=$1
@@ -38,7 +32,7 @@ fetch_response() {
     echo "Fetching from: $url"
 
     local response
-    response=$(curl -su "$username:$password" "$url")
+    response=$(curl -su "$USERNAME:$PASSWORD" "$url")
     handle_response "$response"
 
     local next_page
@@ -51,8 +45,6 @@ usage() {
     echo "Clone all <team> repositories from bitbucket.org"
     echo
 }
-
-read_credentials
 
 DRYRUN=no
 while [[ $1 ]]; do
@@ -73,6 +65,8 @@ while [[ $1 ]]; do
     esac
     shift
 done
+
+read_credentials .bitbucket-credentials
 
 olddir=$(pwd)
 cd "$outputdir" || exit 1
