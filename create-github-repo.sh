@@ -11,12 +11,12 @@ createrepo() {
     CREATEREPO="{\"name\": \"${repo}\", \"private\": true}"
 
     is_git "${sourcedir}/${repo}" && {
-        echo "Create ${repo} repo for ${team}"
+        echo "Create ${repo} repo for ${organization} organization"
         [[ $DRYRUN != "yes" ]] && {
             curl --user "${USERNAME}:${PASSWORD}" \
                 --header "Content-Type: application/json" \
                 --data "${CREATEREPO}" \
-                "https://api.github.com/orgs/${team}/repos"
+                "https://api.github.com/orgs/${organization}/repos"
         }
     }
 }
@@ -29,7 +29,7 @@ process_directory() {
 }
 
 usage() {
-    echo "$0 --team TEAM --source-dir SOURCEDIR [--dry-run] [--help]"
+    echo "$0 --organization ORGANIZATION --source-dir SOURCEDIR [--dry-run] [--help]"
     echo "Create one github repository per each direcotry in source"
     echo
 }
@@ -41,8 +41,8 @@ while [[ $1 ]]; do
         --dry-run)
             DRYRUN=yes
             ;;
-        --team)
-            team="$2"
+        --organization|--org)
+            organization="$2"
             ;;
         --source-dir)
             sourcedir="$2"
@@ -56,7 +56,7 @@ while [[ $1 ]]; do
 done
 
 
-[[ -z $team ]] || [[ -z $sourcedir ]] && { usage; exit 1; }
+[[ -z $organization ]] || [[ -z $sourcedir ]] && { usage; exit 1; }
 
 read_credentials .github-credentials
-process_directory "${sourcedir}" "${team}"
+process_directory "${sourcedir}" "${organization}"

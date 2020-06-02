@@ -83,11 +83,8 @@ Create a file `.github-credentials` with the content:
 
 Run the script:
 
-    ./create-github-repo.sh --team TEAM --source-dir PATH-TO-GIT-REPOSITORIES
+    ./create-github-repo.sh --organization ORGANIZATION --source-dir PATH-TO-GIT-REPOSITORIES
 
-Yes, the TEAM is actually organization, I forgot to fix it. It works
-no matter the variable name (although it bothers me enough that I just
-might fix it).
 
 Push to github
 --------------
